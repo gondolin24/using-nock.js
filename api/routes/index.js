@@ -1,9 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+
+router.get('/carrots', function(req, res, next) {
+  res.json({
+    color:'orange'
+  })
+});
+router.get('/apples', function(req, res, next) {
+  res.json({
+    color:'green'
+  })
 });
 
 module.exports = router;
