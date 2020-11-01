@@ -1,2 +1,2 @@
 # using-nock.js
-testing out nock.js
+testing playground for nock.js
