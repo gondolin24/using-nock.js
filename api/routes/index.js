@@ -4,29 +4,60 @@ var express = require('express');
 var router = express.Router();
 const FetchKit = require('../fetch/FetchKit')
 const {decode} = require('./Decoder')
+const recorded = require('./recorded-file')
 
-router.get('/nock-run=black-box', function (req, res, next) {
+router.get('/nock-run-black-box-one', async function (req, res, next) {
+
     nock('https://wikimedia.org')
-        .get('/api/rest_v1/page/random/summary')
+        .get('/')
+        .reply(200, {body: recorded})
+
+    const fetchKit = new FetchKit()
+    const response = await fetchKit.getRandomWiki()
+    res.json(response)
+});
+
+router.get('/nock-run-black-box-two', async function (req, res, next) {
+    nock('https://wikimedia.org')
+        .get('/')
         .reply(200, {
-            test: 'nock'
+            food: 'Boil water and leave it to cool'
         })
+    const fetchKit = new FetchKit()
+    const response = await fetchKit.getRandomWiki()
+
+    res.json(response)
 
 });
+
+
+router.get('/get-random-wiki', async function (req, res, next) {
+    const fetchKit = new FetchKit()
+    const response = await fetchKit.getRandomWiki()
+
+    res.json(response)
+});
+
+
 router.get('/nock-record', async function (req, res, next) {
+    //flag needed to parse and save later
     nock.recorder.rec({
         output_objects: true
     })
 
     const fetchKit = new FetchKit()
-    const response = await fetchKit.getRandomApi()
+    const response = await fetchKit.getRandomWiki()
     nock.restore()
     const nockCalls = nock.recorder.play()
+
+
     await nockCalls.forEach(async (item) => {
-        const {status, response} = item
+        const {status, response, path} = item
+        //write file to local directory to be called later
         if (status === 200) {
-            const rr = decode(response)
-            await fs.writeFileSync(`${__dirname}+/temp.json`, JSON.stringify(rr), function () {
+            //decoder needed. Unable to decode with vanilla js
+            const decoded = decode(response)
+            await fs.writeFileSync(`${__dirname}\\recorded-file.json`, JSON.stringify(decoded), function () {
             })
         }
     })

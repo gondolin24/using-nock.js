@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 
 class FetchKit {
 
-    async getRandomApi() {
+    async getRandomWiki() {
         const resp = await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary', {
             method: 'GET',
             headers: {
