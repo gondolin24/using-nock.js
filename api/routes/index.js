@@ -8,24 +8,31 @@ const recorded = require('./recorded-file')
 
 router.get('/nock-run-black-box-one', async function (req, res, next) {
 
-    nock('https://wikimedia.org')
-        .get('/')
-        .reply(200, {body: recorded})
+//you can play around with params with get
+    nock('https://en.wikipedia.org')
+        .get('/api/rest_v1/page/random/summary')
+        .reply(200, recorded)
 
     const fetchKit = new FetchKit()
     const response = await fetchKit.getRandomWiki()
+    //NEEDED  SO MOCK DOES NOT SPILL INTO OTHER CALLS
+    //THINK OF THIS LIKE JEST BEFORE ALL
+    nock.cleanAll()
+
     res.json(response)
 });
 
 router.get('/nock-run-black-box-two', async function (req, res, next) {
-    nock('https://wikimedia.org')
-        .get('/')
+    nock('https://en.wikipedia.org')
+        .get('/api/rest_v1/page/random/summary')
         .reply(200, {
             food: 'Boil water and leave it to cool'
         })
     const fetchKit = new FetchKit()
     const response = await fetchKit.getRandomWiki()
-
+    //NEEDED  SO MOCK DOES NOT SPILL INTO OTHER CALLS
+    //THINK OF THIS LIKE JEST BEFORE ALL
+    nock.cleanAll()
     res.json(response)
 
 });
@@ -34,7 +41,7 @@ router.get('/nock-run-black-box-two', async function (req, res, next) {
 router.get('/get-random-wiki', async function (req, res, next) {
     const fetchKit = new FetchKit()
     const response = await fetchKit.getRandomWiki()
-
+    //standard
     res.json(response)
 });
 
@@ -61,7 +68,7 @@ router.get('/nock-record', async function (req, res, next) {
             })
         }
     })
-
+//standard
     res.json(response)
 });
 
