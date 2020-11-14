@@ -1,14 +1,15 @@
 const Bottle = require('bottlejs')
-
+const WIKI = require('../domain-object/Wiki')
 const FetchKit = require('../fetch/FetchKit')
 
 var bottle = new Bottle();
-const fetch = new FetchKit()
-function wrapper(){
-    return new FetchKit()
-}
 
-bottle.service('WIKI', wrapper);
+bottle.service('WIKI', () => {
+    return new FetchKit()
+});
+
+WIKI.register(bottle)
+
 
 module.exports = bottle
 // bottle.container.beer

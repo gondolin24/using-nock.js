@@ -29,7 +29,18 @@ router.get('/get-random-wiki-bottle', async function (req, res, next) {
     } catch (e) {
         next(e)
     }
+});
 
+
+//this does not work
+router.get('/get-random-wiki-bottle-factory', async function (req, res, next) {
+    try {
+        const response = bottle.container.DomainObject('hello').getData()
+        //standard
+        res.json(response)
+    } catch (e) {
+        next(e)
+    }
 });
 
 
