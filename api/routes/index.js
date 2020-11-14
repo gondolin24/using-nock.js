@@ -4,23 +4,7 @@ var express = require('express');
 var router = express.Router();
 const FetchKit = require('../fetch/FetchKit')
 const {decode} = require('./Decoder')
-const recorded = require('./recorded-file')
-
-router.get('/nock-run-black-box-one', async function (req, res, next) {
-
-//you can play around with params with get
-    nock('https://en.wikipedia.org')
-        .get('/api/rest_v1/page/random/summary')
-        .reply(200, recorded)
-
-    const fetchKit = new FetchKit()
-    const response = await fetchKit.getRandomWiki()
-    //NEEDED  SO MOCK DOES NOT SPILL INTO OTHER CALLS
-    //THINK OF THIS LIKE JEST BEFORE ALL
-    nock.cleanAll()
-
-    res.json(response)
-});
+const bottle = require('../bottle-js/BottleService')
 
 router.get('/nock-run-black-box-two', async function (req, res, next) {
     nock('https://en.wikipedia.org')
@@ -34,6 +18,17 @@ router.get('/nock-run-black-box-two', async function (req, res, next) {
     //THINK OF THIS LIKE JEST BEFORE ALL
     nock.cleanAll()
     res.json(response)
+
+});
+
+router.get('/get-random-wiki-bottle', async function (req, res, next) {
+    try {
+        const response = await bottle.container.WIKI.getRandomWiki()
+        //standard
+        res.json(response)
+    } catch (e) {
+        next(e)
+    }
 
 });
 
