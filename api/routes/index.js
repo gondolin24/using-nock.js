@@ -43,7 +43,6 @@ router.get('/get-random-wiki-bottle-factory', async function (req, res, next) {
     }
 });
 
-
 router.get('/get-random-wiki', async function (req, res, next) {
     const fetchKit = new FetchKit()
     const response = await fetchKit.getRandomWiki()
