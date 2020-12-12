@@ -6,9 +6,7 @@ const FetchKit = require('../fetch/FetchKit')
 
 var bottle = new Bottle();
 
-bottle.service('WIKI', () => {
-    return new FetchKit()
-});
+bottle.service('WIKI', FetchKit);
 
 WIKI.register(bottle)
 
